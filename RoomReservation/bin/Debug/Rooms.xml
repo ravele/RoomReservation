@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Room>
+    <Id>1</Id>
+    <Name>Sala Gijon</Name>
+  </Room>
+  <Room>
+    <Id>2</Id>
+    <Name>Sala Oscos</Name>
+  </Room>
+  <Room>
+    <Id>3</Id>
+    <Name>TesteY</Name>
+  </Room>
+</NewDataSet>
