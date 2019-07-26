@@ -41,7 +41,7 @@ namespace RoomReservation.DAL
                 using (DataTable dtBooking = new DataTable("Booking"))
                 {
                     dtBooking.Columns.Add("Id", typeof(int));
-                    dtBooking.Columns.Add("RoomId", typeof(string));
+                    dtBooking.Columns.Add("RoomId", typeof(int));
                     dtBooking.Columns.Add("Username", typeof(string));
                     dtBooking.Columns.Add("WeekDay", typeof(string));
                     dtBooking.Columns.Add("StartBookingHour", typeof(string));

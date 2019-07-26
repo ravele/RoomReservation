@@ -63,10 +63,13 @@ namespace RoomReservation
                 LoadStartHour();
             }
 
-            bookings = new Bookings(cbxRoom.SelectedValue.ToString());
-            bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
-
-            LoadBookings();
+            if (cbxRoom.SelectedValue != null)
+            {
+                bookings = new Bookings(cbxRoom.SelectedValue.ToString());
+                if (bookings != null)
+                    bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
+                LoadBookings();
+            }
             tmrRefreshGrid.Interval = 60000;
             tmrRefreshGrid.Start();
         }
@@ -81,6 +84,18 @@ namespace RoomReservation
             FormRoom frmRoom = new FormRoom();
             frmRoom.ShowDialog();
             LoadRooms();
+            if (bookings == null && cbxRoom.SelectedItem == null)
+                return;
+            if (bookings == null && cbxRoom.SelectedItem != null)
+                bookings = new Bookings(cbxRoom.SelectedValue.ToString());
+            if (bookings != null && cbxRoom.SelectedItem == null)
+            {
+                for (int i = 0; i < 11; i++)
+			        dgvBooking.Columns.Remove(dgvBooking.Columns[0].Name);
+                return;
+            }
+            bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
+            LoadBookings();
         }
 
         /// <summary>
@@ -90,52 +105,65 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void btnBookingSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtName.Text) || cbxWeekDay.SelectedItem != null || cbxStartHour.SelectedItem != null || cbxEndHour.SelectedItem != null)
+            if (cbxRoom.SelectedItem != null)
             {
-                splitter = cbxWeekDay.SelectedItem.ToString().Split(' ');
-                startDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxStartHour.SelectedItem;
-                DateTime startSelected = Convert.ToDateTime(startDateSelected);
-                endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxEndHour.SelectedItem;
-                DateTime endSelected = Convert.ToDateTime(endDateSelected);
-
-                #region Verifying if the booking already exists
-                for (int i = 0; i < bookingList.Count; i++)
+                if (!string.IsNullOrWhiteSpace(txtName.Text) && (cbxWeekDay.SelectedItem != null && cbxWeekDay.SelectedItem != "") &&
+                    (cbxStartHour.SelectedItem != null && cbxStartHour.SelectedItem != "") &&
+                    (cbxEndHour.SelectedItem != null && cbxEndHour.SelectedItem != ""))
                 {
-                    splitter = bookingList[i].WeekDay.Split(' ');
-                    startDateSelected = splitter.Last() + "/"+ DateTime.Today.Year + " " + bookingList[i].StartBookingHour;
-                    startList = Convert.ToDateTime(startDateSelected);
+                    splitter = cbxWeekDay.SelectedItem.ToString().Split(' ');
+                    startDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxStartHour.SelectedItem;
+                    DateTime startSelected = Convert.ToDateTime(startDateSelected);
+                    endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxEndHour.SelectedItem;
+                    DateTime endSelected = Convert.ToDateTime(endDateSelected);
 
-                    endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + bookingList[i].EndBookingHour;
-                    endList = Convert.ToDateTime(endDateSelected);
-
-                    if ((startList <= startSelected && endList >= endSelected) ||
-                        (startList >= startSelected && endList <= endSelected))
+                    #region Verifying if the booking already exists
+                    bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
+                    LoadBookings();
+                    for (int i = 0; i < bookingList.Count; i++)
                     {
-                        MessageBox.Show("O horário está reservado. Verifique o horário escolhido.", "Mecalux", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        splitter = bookingList[i].WeekDay.Split(' ');
+                        startDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + bookingList[i].StartBookingHour;
+                        startList = Convert.ToDateTime(startDateSelected);
+
+                        endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + bookingList[i].EndBookingHour;
+                        endList = Convert.ToDateTime(endDateSelected);
+
+                        if ((startList <= startSelected && endList >= endSelected) ||
+                            (startList >= startSelected && endList <= endSelected))
+                        {
+                            MessageBox.Show("O horário está reservado. Verifique o horário escolhido.", "Mecalux", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                    }
+                    #endregion
+
+                    int startHour = Convert.ToInt32(cbxStartHour.SelectedItem.ToString().Substring(0, 2));
+                    int endHour = Convert.ToInt32(cbxEndHour.SelectedItem.ToString().Substring(0, 2));
+
+                    for (int i = 0; i < (endHour - startHour); i++)
+                    {
+                        LoadData(i);
+                        bookings.ManipulateBooking(booking);
+                        bookings.SaveBooking();
+                        bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
                     }
 
+                    txtName.Clear();
+                    cbxWeekDay.SelectedIndex = 0;
+                    cbxStartHour.SelectedIndex = 0;
+                    cbxEndHour.Items.Clear();
+
+                    roomId = Convert.ToInt32(cbxRoom.SelectedValue.ToString());
+                    bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
+                    LoadBookings();
                 }
-                #endregion
-
-                int startHour = Convert.ToInt32(cbxStartHour.SelectedItem.ToString().Substring(0, 2));
-                int endHour = Convert.ToInt32(cbxEndHour.SelectedItem.ToString().Substring(0, 2));
-
-                for (int i = 0; i < (endHour-startHour); i++)
+                else
                 {
-                    LoadData(i);
-                    bookings.ManipulateBooking(booking);
-                    bookings.SaveBooking();
+                    MessageBox.Show("Preencha todos os campos para concluir.", "Mecalux", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-
-                txtName.Clear();
-                cbxWeekDay.SelectedIndex = 0;
-                cbxStartHour.SelectedIndex = 0;
-                cbxEndHour.Items.Clear();
-
-                roomId = Convert.ToInt32(cbxRoom.SelectedValue.ToString());
-                bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
-                LoadBookings();
             }
         }
 
@@ -188,12 +216,13 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void btnBookingDelete_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(dgvBooking.SelectedCells[0].Value.ToString()) && !dgvBooking.CurrentRow.Cells["Horário"].Selected)
-                if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    bookings.DeleteBooking(dgvBooking.SelectedCells[0].Tag.ToString());
-                    LoadBookings();
-                }
+            if (cbxRoom.SelectedItem != null)
+                if (!string.IsNullOrEmpty(dgvBooking.SelectedCells[0].Value.ToString()) && !dgvBooking.CurrentRow.Cells["Horário"].Selected)
+                    if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        bookings.DeleteBooking(dgvBooking.SelectedCells[0].Tag.ToString());
+                        LoadBookings();
+                    }
         }
         
         /// <summary>
@@ -203,7 +232,19 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void tmrRefreshGrid_Tick(object sender, EventArgs e)
         {
-            LoadBookings();
+            if (bookings != null)
+                LoadBookings();
+        }
+
+        /// <summary>
+        /// Event that calls the btnBookingDelete event when is pressed delete key.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgvBooking_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                btnBookingDelete_Click(sender, e);
         }
         #endregion
 
@@ -253,7 +294,7 @@ namespace RoomReservation
 
             booking = new Booking()
             {
-                Id = bookingListAll.Count > 0 ? bookingListAll.LastOrDefault().Id + i + 1 : 1,
+                Id = bookingListAll.Count > 0 ? bookingListAll.LastOrDefault().Id + 1 : bookingListAll.Count + i + 1,
                 RoomId = cbxRoom.SelectedValue == null ? 0 : Convert.ToInt32(cbxRoom.SelectedValue),
                 Username = txtName.Text,
                 WeekDay = cbxWeekDay.SelectedItem.ToString(),

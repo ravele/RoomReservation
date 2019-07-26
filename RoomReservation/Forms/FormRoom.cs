@@ -19,6 +19,8 @@ namespace RoomReservation
         private Rooms rooms = null;
         private Room room = null;
         private List<Room> roomList = null;
+        private Bookings bookings = null;
+        private List<Booking> bookingList = null;
         #endregion
 
         #region Constructors
@@ -27,6 +29,7 @@ namespace RoomReservation
             InitializeComponent();
             rooms = new Rooms();
             roomList = new List<Room>();
+            bookingList = new List<Booking>();
 
             LoadRooms();
         }
@@ -52,7 +55,7 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void btnRoomSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtRoomName.Text))
+            if (!string.IsNullOrWhiteSpace(txtRoomName.Text))
             {
                 roomList = Functions.ConvertToList<Room>(rooms.LoadXML());
 
@@ -80,11 +83,23 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void btnRoomDelete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Deseja excluir a sala?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-            {
-                rooms.DeleteRoom(dgvRoom.CurrentRow.Cells[0].Value.ToString());
-                dgvRoom.DataSource = rooms.LoadXML();
-            }
+            if (dgvRoom.CurrentCell != null)
+                if (MessageBox.Show("Deseja excluir a sala?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    int roomId = (int)dgvRoom.CurrentRow.Cells[0].Value;
+                    bookings = new Bookings(roomId.ToString());
+                    bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
+                    if (bookingList.Count > 0)
+                    {
+                        MessageBox.Show("Não é possível excluir a sala, pois há agendamento(s) atribuído(s) a ela.", "Mecalux", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else
+                    {
+                        rooms.DeleteRoom(dgvRoom.CurrentRow.Cells[0].Value.ToString());
+                        dgvRoom.DataSource = rooms.LoadXML();
+                    }
+                }
         }
 
         /// <summary>
@@ -107,11 +122,22 @@ namespace RoomReservation
         /// </summary>
         private void LoadData()
         {
-            room = new Room()
+            if (roomList.Count != 0)
             {
-                Id = (txtRoomName.AccessibleName == "0" ? roomList.Last().Id + 1 : Convert.ToInt32(txtRoomName.AccessibleName)),
-                Name = txtRoomName.Text
-            };
+                room = new Room()
+                {
+                    Id = (txtRoomName.AccessibleName == "0" ? roomList.Last().Id + 1 : Convert.ToInt32(txtRoomName.AccessibleName)),
+                    Name = txtRoomName.Text
+                };
+            }
+            else
+            {
+                room = new Room()
+                {
+                    Id = 1,
+                    Name = txtRoomName.Text
+                };
+            }
         }
 
         /// <summary>
