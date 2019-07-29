@@ -1,5 +1,6 @@
 ﻿using RoomReservation.BLL;
 using RoomReservation.DAL;
+using RoomReservation.Forms;
 using RoomReservation.Utils;
 using System;
 using System.Collections.Generic;
@@ -96,6 +97,17 @@ namespace RoomReservation
             }
             bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
             LoadBookings();
+        }
+
+        /// <summary>
+        /// Event that instances the Bookings' screen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFutureBookings_Click(object sender, EventArgs e)
+        {
+            FormBookings frmBooking = new FormBookings();
+            frmBooking.ShowDialog();
         }
 
         /// <summary>
