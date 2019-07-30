@@ -1,6 +1,5 @@
 ﻿using RoomReservation.BLL;
 using RoomReservation.DAL;
-using RoomReservation.Forms;
 using RoomReservation.Utils;
 using System;
 using System.Collections.Generic;
@@ -60,7 +59,8 @@ namespace RoomReservation
             else
             {
                 LoadRooms();
-                LoadWeekDays();
+                dtpWeekday.MinDate = DateTime.Today;
+                dtpWeekday.MaxDate = DateTime.Today.AddDays(365);
                 LoadStartHour();
             }
 
@@ -70,7 +70,9 @@ namespace RoomReservation
                 if (bookings != null)
                     bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
                 LoadBookings();
+                LoadAllBookings();
             }
+
             tmrRefreshGrid.Interval = 60000;
             tmrRefreshGrid.Start();
         }
@@ -92,22 +94,12 @@ namespace RoomReservation
             if (bookings != null && cbxRoom.SelectedItem == null)
             {
                 for (int i = 0; i < 11; i++)
-			        dgvBooking.Columns.Remove(dgvBooking.Columns[0].Name);
+			        dgvQuickBookings.Columns.Remove(dgvQuickBookings.Columns[0].Name);
                 return;
             }
             bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
             LoadBookings();
-        }
-
-        /// <summary>
-        /// Event that instances the Bookings' screen.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnFutureBookings_Click(object sender, EventArgs e)
-        {
-            FormBookings frmBooking = new FormBookings();
-            frmBooking.ShowDialog();
+            LoadAllBookings();
         }
 
         /// <summary>
@@ -119,26 +111,25 @@ namespace RoomReservation
         {
             if (cbxRoom.SelectedItem != null)
             {
-                if (!string.IsNullOrWhiteSpace(txtName.Text) && (cbxWeekDay.SelectedItem != null && cbxWeekDay.SelectedItem != "") &&
-                    (cbxStartHour.SelectedItem != null && cbxStartHour.SelectedItem != "") &&
+                if (!string.IsNullOrWhiteSpace(txtName.Text) && (cbxStartHour.SelectedItem != null && cbxStartHour.SelectedItem != "") &&
                     (cbxEndHour.SelectedItem != null && cbxEndHour.SelectedItem != ""))
                 {
-                    splitter = cbxWeekDay.SelectedItem.ToString().Split(' ');
-                    startDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxStartHour.SelectedItem;
+                    startDateSelected = dtpWeekday.Text + " " + cbxStartHour.SelectedItem;
                     DateTime startSelected = Convert.ToDateTime(startDateSelected);
-                    endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + cbxEndHour.SelectedItem;
+                    endDateSelected = dtpWeekday.Text + " " + cbxEndHour.SelectedItem;
                     DateTime endSelected = Convert.ToDateTime(endDateSelected);
 
                     #region Verifying if the booking already exists
                     bookingListAll = Functions.ConvertToList<Booking>(bookings.LoadXML());
                     LoadBookings();
+                    LoadAllBookings();
                     for (int i = 0; i < bookingList.Count; i++)
                     {
                         splitter = bookingList[i].WeekDay.Split(' ');
-                        startDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + bookingList[i].StartBookingHour;
+                        startDateSelected = bookingList[i].WeekDay + " " + bookingList[i].StartBookingHour;
                         startList = Convert.ToDateTime(startDateSelected);
 
-                        endDateSelected = splitter.Last() + "/" + DateTime.Today.Year + " " + bookingList[i].EndBookingHour;
+                        endDateSelected = bookingList[i].WeekDay + " " + bookingList[i].EndBookingHour;
                         endList = Convert.ToDateTime(endDateSelected);
 
                         if ((startList <= startSelected && endList >= endSelected) ||
@@ -163,13 +154,14 @@ namespace RoomReservation
                     }
 
                     txtName.Clear();
-                    cbxWeekDay.SelectedIndex = 0;
+                    dtpWeekday.Value = DateTime.Today;
                     cbxStartHour.SelectedIndex = 0;
                     cbxEndHour.Items.Clear();
 
                     roomId = Convert.ToInt32(cbxRoom.SelectedValue.ToString());
                     bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
                     LoadBookings();
+                    LoadAllBookings();
                 }
                 else
                 {
@@ -207,6 +199,7 @@ namespace RoomReservation
                 roomId = Convert.ToInt32(cbxRoom.SelectedValue.ToString());
                 bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
                 LoadBookings();
+                LoadAllBookings();
             }
         }
 
@@ -229,11 +222,12 @@ namespace RoomReservation
         private void btnBookingDelete_Click(object sender, EventArgs e)
         {
             if (cbxRoom.SelectedItem != null)
-                if (!string.IsNullOrEmpty(dgvBooking.SelectedCells[0].Value.ToString()) && !dgvBooking.CurrentRow.Cells["Horário"].Selected)
+                if (!string.IsNullOrEmpty(dgvQuickBookings.SelectedCells[0].Value.ToString()) && !dgvQuickBookings.CurrentRow.Cells["Horário"].Selected)
                     if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                     {
-                        bookings.DeleteBooking(dgvBooking.SelectedCells[0].Tag.ToString());
+                        bookings.DeleteBooking(dgvQuickBookings.SelectedCells[0].Tag.ToString());
                         LoadBookings();
+                        LoadAllBookings();
                     }
         }
         
@@ -245,7 +239,10 @@ namespace RoomReservation
         private void tmrRefreshGrid_Tick(object sender, EventArgs e)
         {
             if (bookings != null)
+            {
                 LoadBookings();
+                LoadAllBookings();
+            }
         }
 
         /// <summary>
@@ -258,6 +255,61 @@ namespace RoomReservation
             if (e.KeyCode == Keys.Delete)
                 btnBookingDelete_Click(sender, e);
         }
+
+        /// <summary>
+        /// Event that expands the visualization of the all bookings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnExpand_Click(object sender, EventArgs e)
+        {
+            if (btnExpand.Text == "▼")
+            {
+                btnExpand.Text = "▲";
+                dgvAllBookings.Visible = true;
+            }
+            else
+            {
+                btnExpand.Text = "▼";
+                dgvAllBookings.Visible = false;
+            }
+        }
+
+        /// <summary>
+        /// Event that delete info when clicks in the button X.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgvAllBookings_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 6)
+            {
+                if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    bookings.DeleteBooking(dgvAllBookings.SelectedCells[0].Value.ToString());
+                    LoadBookings();
+                    LoadAllBookings();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Event that doesn't allow that could be selected saturdays and sundays in the calendar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dtpWeekday_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpWeekday.Text.ToLower().Contains("saturday") || dtpWeekday.Text.Contains("sábado"))
+            {
+                dtpWeekday.Text = dtpWeekday.Value.AddDays(2).ToString();
+            }
+            else if (dtpWeekday.Text.ToLower().Contains("sunday") || dtpWeekday.Text.Contains("domingo"))
+            {
+                dtpWeekday.Text = dtpWeekday.Value.AddDays(1).ToString();
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -273,18 +325,29 @@ namespace RoomReservation
         }
 
         /// <summary>
-        /// Method that load week's day in the combobox "cbxWeekDay"
+        /// Method that load all the bookings
         /// </summary>
-        private void LoadWeekDays()
+        private void LoadAllBookings()
         {
-            var culture = new CultureInfo("pt-BR");
-
-            for (int i = 0; i < 12; i++)
-                if (DateTime.Today.AddDays(i).DayOfWeek != DayOfWeek.Saturday && 
-                    DateTime.Today.AddDays(i).DayOfWeek != DayOfWeek.Sunday)
-                    cbxWeekDay.Items.Add(culture.DateTimeFormat.GetDayName(DateTime.Today.AddDays(i).DayOfWeek) 
-                        + " - " + DateTime.Today.AddDays(i).Day.ToString().PadLeft(2,'0') + "/" 
-                        + DateTime.Today.AddDays(i).Month.ToString().PadLeft(2, '0'));
+            dgvAllBookings.Columns.Clear();
+            dgvAllBookings.DataSource = bookingList;
+            dgvAllBookings.Columns[0].Visible = false;
+            dgvAllBookings.Columns[1].Visible = false;
+            dgvAllBookings.Columns[2].HeaderText = "Reservante";
+            dgvAllBookings.Columns[3].HeaderText = "Data da Reserva";
+            dgvAllBookings.Columns[4].HeaderText = "Hora Inicial";
+            dgvAllBookings.Columns[5].HeaderText = "Hora Final";
+            dgvAllBookings.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
+            DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
+            dgvAllBookings.Columns.Add(btn);
+            btn.HeaderText = "";
+            btn.Text = "X";
+            btn.FlatStyle = FlatStyle.Popup;
+            btn.DefaultCellStyle.BackColor = Color.Red;
+            btn.DefaultCellStyle.ForeColor = Color.White;
+            btn.Name = "btn";
+            btn.UseColumnTextForButtonValue = true;
+            dgvAllBookings.Columns[6].Width = 50;
         }
 
         /// <summary>
@@ -309,7 +372,7 @@ namespace RoomReservation
                 Id = bookingListAll.Count > 0 ? bookingListAll.LastOrDefault().Id + 1 : bookingListAll.Count + i + 1,
                 RoomId = cbxRoom.SelectedValue == null ? 0 : Convert.ToInt32(cbxRoom.SelectedValue),
                 Username = txtName.Text,
-                WeekDay = cbxWeekDay.SelectedItem.ToString(),
+                WeekDay = dtpWeekday.Text,
                 StartBookingHour = (startHour+i < 10 ? "0" + (startHour + i) + ":00" : (startHour + i) + ":00"),
                 EndBookingHour = (startHour+i+1 < 10 ? "0" + (startHour + i + 1) + ":00" : (startHour + i + 1) + ":00")
             };
@@ -335,11 +398,11 @@ namespace RoomReservation
                     }
                     flagMonday = false;
                 }
-                bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).ToList();
+                bookingList = Functions.ConvertToList<Booking>(bookings.LoadXML()).Where(x => x.RoomId == roomId).OrderBy(x => Convert.ToDateTime(x.WeekDay)).ThenBy(x => x.StartBookingHour).ToList();
 
-                dgvBooking.Columns.Clear();
-                dgvBooking.Columns.Add("Horário", "Horário");
-                dgvBooking.ReadOnly = true;
+                dgvQuickBookings.Columns.Clear();
+                dgvQuickBookings.Columns.Add("Horário", "Horário");
+                dgvQuickBookings.ReadOnly = true;
 
                 #region Creating fix columns
                 for (int i = 0; i < 2; i++)
@@ -350,7 +413,7 @@ namespace RoomReservation
                                           DateTime.Today.AddDays((-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday) + (i * 7)).Month.ToString().PadLeft(2, '0');
                         colMonday.HeaderText = "segunda-feira - " + colMonday.Name;
                         colMonday.Width = 145;
-                        dgvBooking.Columns.Add(colMonday);
+                        dgvQuickBookings.Columns.Add(colMonday);
                     }
                     using (DataGridViewColumn colTuesday = new DataGridViewColumn())
                     {
@@ -358,7 +421,7 @@ namespace RoomReservation
                                         DateTime.Today.AddDays((-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Tuesday) + (i * 7)).Month.ToString().PadLeft(2, '0');
                         colTuesday.HeaderText = "terça-feira - " + colTuesday.Name;
                         colTuesday.Width = 145;
-                        dgvBooking.Columns.Add(colTuesday);
+                        dgvQuickBookings.Columns.Add(colTuesday);
                     }
                     using (DataGridViewColumn colWednesday = new DataGridViewColumn())
                     {
@@ -366,7 +429,7 @@ namespace RoomReservation
                                          DateTime.Today.AddDays((-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Wednesday) + (i * 7)).Month.ToString().PadLeft(2, '0');
                         colWednesday.HeaderText = "quarta-feira - " + colWednesday.Name;
                         colWednesday.Width = 145;
-                        dgvBooking.Columns.Add(colWednesday);
+                        dgvQuickBookings.Columns.Add(colWednesday);
                     }
                     using (DataGridViewColumn colThursday = new DataGridViewColumn())
                     {
@@ -374,7 +437,7 @@ namespace RoomReservation
                                          DateTime.Today.AddDays((-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Thursday) + (i * 7)).Month.ToString().PadLeft(2, '0');
                         colThursday.HeaderText = "quinta-feira - " + colThursday.Name;
                         colThursday.Width = 145;
-                        dgvBooking.Columns.Add(colThursday);
+                        dgvQuickBookings.Columns.Add(colThursday);
                     }
                     using (DataGridViewColumn colFriday = new DataGridViewColumn())
                     {
@@ -382,7 +445,7 @@ namespace RoomReservation
                                         DateTime.Today.AddDays((-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Friday) + (i * 7)).Month.ToString().PadLeft(2, '0');
                         colFriday.HeaderText = "sexta-feira - " + colFriday.Name;
                         colFriday.Width = 145;
-                        dgvBooking.Columns.Add(colFriday);
+                        dgvQuickBookings.Columns.Add(colFriday);
                     }
                 }
                 #endregion
@@ -401,28 +464,31 @@ namespace RoomReservation
                             row.Cells.Add(new DataGridViewTextBoxCell { Value = (c == 0) ? DateTime.Today.AddHours(ind).ToShortTimeString() : "" });
                         }
                         ind++;
-                        dgvBooking.Rows.Add(row);
+                        dgvQuickBookings.Rows.Add(row);
                     }
                     
                 }
                 #endregion
 
                 #region Populating cells
-                for (int i = 0; i < dgvBooking.Rows.Count; i++)
+                for (int i = 0; i < dgvQuickBookings.Rows.Count; i++)
                     for (int j = 0; j < bookingList.Count; j++)
-                        if (Convert.ToDateTime(bookingList[j].StartBookingHour) <= Convert.ToDateTime(dgvBooking.Rows[i].Cells[0].Value.ToString()) &&
-                            Convert.ToDateTime(bookingList[j].EndBookingHour) > Convert.ToDateTime(dgvBooking.Rows[i].Cells[0].Value.ToString()))
-                            for (int k = 1; k < dgvBooking.Rows[i].Cells.Count; k++)
-                                if (bookingList[j].WeekDay == dgvBooking.Columns[k].HeaderText.ToString())
+                        if (Convert.ToDateTime(bookingList[j].StartBookingHour) <= Convert.ToDateTime(dgvQuickBookings.Rows[i].Cells[0].Value.ToString()) &&
+                            Convert.ToDateTime(bookingList[j].EndBookingHour) > Convert.ToDateTime(dgvQuickBookings.Rows[i].Cells[0].Value.ToString()))
+                            for (int k = 1; k < dgvQuickBookings.Rows[i].Cells.Count; k++)
+                            {
+                                var split = dgvQuickBookings.Columns[k].HeaderText.Split(' ');
+                                if (bookingList[j].WeekDay == split.Last().ToString() + "/" + DateTime.Today.Year.ToString())
                                 {
-                                    dgvBooking.Rows[i].Cells[k].Tag = bookingList[j].Id;
-                                    dgvBooking.Rows[i].Cells[k].Value = bookingList[j].Username;
+                                    dgvQuickBookings.Rows[i].Cells[k].Tag = bookingList[j].Id;
+                                    dgvQuickBookings.Rows[i].Cells[k].Value = bookingList[j].Username;
                                 }
+                            }
                 #endregion
 
-                dgvBooking.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
-                dgvBooking.Columns["Horário"].Frozen = true;
-                dgvBooking.Columns["Horário"].Width = 100;
+                dgvQuickBookings.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
+                dgvQuickBookings.Columns["Horário"].Frozen = true;
+                dgvQuickBookings.Columns["Horário"].Width = 100;
 
             }
             catch (Exception ex)

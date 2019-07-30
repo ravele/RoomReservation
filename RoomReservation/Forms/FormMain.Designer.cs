@@ -29,22 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnFutureBookings = new System.Windows.Forms.Button();
+            this.dtpWeekday = new System.Windows.Forms.DateTimePicker();
             this.btnBookingDelete = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.cbxEndHour = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.cbxStartHour = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.cbxWeekDay = new System.Windows.Forms.ComboBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnBookingSave = new System.Windows.Forms.Button();
@@ -52,27 +51,25 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cbxRoom = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dgvBooking = new System.Windows.Forms.DataGridView();
+            this.dgvAllBookings = new System.Windows.Forms.DataGridView();
+            this.dgvQuickBookings = new System.Windows.Forms.DataGridView();
             this.tmrRefreshGrid = new System.Windows.Forms.Timer(this.components);
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dtpWeekday = new System.Windows.Forms.DateTimePicker();
+            this.btnExpand = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvBooking)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAllBookings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvQuickBookings)).BeginInit();
             this.SuspendLayout();
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.dtpWeekday);
-            this.panel2.Controls.Add(this.btnFutureBookings);
             this.panel2.Controls.Add(this.btnBookingDelete);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.cbxEndHour);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.cbxStartHour);
             this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.cbxWeekDay);
             this.panel2.Controls.Add(this.txtName);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.btnBookingSave);
@@ -82,25 +79,20 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(868, 175);
+            this.panel2.Size = new System.Drawing.Size(868, 164);
             this.panel2.TabIndex = 3;
             // 
-            // btnFutureBookings
+            // dtpWeekday
             // 
-            this.btnFutureBookings.BackColor = System.Drawing.Color.Black;
-            this.btnFutureBookings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnFutureBookings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFutureBookings.ForeColor = System.Drawing.Color.White;
-            this.btnFutureBookings.Image = global::RoomReservation.Properties.Resources.calendar_32x32;
-            this.btnFutureBookings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFutureBookings.Location = new System.Drawing.Point(111, 20);
-            this.btnFutureBookings.Name = "btnFutureBookings";
-            this.btnFutureBookings.Size = new System.Drawing.Size(195, 40);
-            this.btnFutureBookings.TabIndex = 25;
-            this.btnFutureBookings.Text = "Agendamentos Futuros";
-            this.btnFutureBookings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnFutureBookings.UseVisualStyleBackColor = false;
-            this.btnFutureBookings.Click += new System.EventHandler(this.btnFutureBookings_Click);
+            this.dtpWeekday.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpWeekday.Location = new System.Drawing.Point(478, 105);
+            this.dtpWeekday.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dtpWeekday.MaxDate = new System.DateTime(2025, 12, 31, 0, 0, 0, 0);
+            this.dtpWeekday.MinDate = new System.DateTime(2019, 1, 1, 0, 0, 0, 0);
+            this.dtpWeekday.Name = "dtpWeekday";
+            this.dtpWeekday.Size = new System.Drawing.Size(145, 25);
+            this.dtpWeekday.TabIndex = 28;
+            this.dtpWeekday.ValueChanged += new System.EventHandler(this.dtpWeekday_ValueChanged);
             // 
             // btnBookingDelete
             // 
@@ -110,7 +102,7 @@
             this.btnBookingDelete.ForeColor = System.Drawing.Color.White;
             this.btnBookingDelete.Image = global::RoomReservation.Properties.Resources.calendar_delete_32x32;
             this.btnBookingDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBookingDelete.Location = new System.Drawing.Point(630, 20);
+            this.btnBookingDelete.Location = new System.Drawing.Point(758, 20);
             this.btnBookingDelete.Name = "btnBookingDelete";
             this.btnBookingDelete.Size = new System.Drawing.Size(90, 40);
             this.btnBookingDelete.TabIndex = 24;
@@ -123,7 +115,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(635, 90);
+            this.label5.Location = new System.Drawing.Point(763, 85);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 17);
             this.label5.TabIndex = 23;
@@ -134,7 +126,7 @@
             this.cbxEndHour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxEndHour.Enabled = false;
             this.cbxEndHour.FormattingEnabled = true;
-            this.cbxEndHour.Location = new System.Drawing.Point(635, 110);
+            this.cbxEndHour.Location = new System.Drawing.Point(763, 105);
             this.cbxEndHour.Name = "cbxEndHour";
             this.cbxEndHour.Size = new System.Drawing.Size(85, 25);
             this.cbxEndHour.TabIndex = 22;
@@ -143,7 +135,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(530, 90);
+            this.label4.Location = new System.Drawing.Point(650, 85);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 17);
             this.label4.TabIndex = 21;
@@ -155,7 +147,7 @@
             this.cbxStartHour.FormattingEnabled = true;
             this.cbxStartHour.Items.AddRange(new object[] {
             ""});
-            this.cbxStartHour.Location = new System.Drawing.Point(530, 110);
+            this.cbxStartHour.Location = new System.Drawing.Point(650, 105);
             this.cbxStartHour.Name = "cbxStartHour";
             this.cbxStartHour.Size = new System.Drawing.Size(85, 25);
             this.cbxStartHour.TabIndex = 20;
@@ -165,35 +157,24 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(320, 90);
+            this.label3.Location = new System.Drawing.Point(475, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(96, 17);
             this.label3.TabIndex = 19;
-            this.label3.Text = "Dia da Semana";
-            // 
-            // cbxWeekDay
-            // 
-            this.cbxWeekDay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxWeekDay.FormattingEnabled = true;
-            this.cbxWeekDay.Items.AddRange(new object[] {
-            ""});
-            this.cbxWeekDay.Location = new System.Drawing.Point(320, 110);
-            this.cbxWeekDay.Name = "cbxWeekDay";
-            this.cbxWeekDay.Size = new System.Drawing.Size(190, 25);
-            this.cbxWeekDay.TabIndex = 18;
+            this.label3.Text = "Dia da Reserva";
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(155, 110);
+            this.txtName.Location = new System.Drawing.Point(195, 105);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(145, 25);
+            this.txtName.Size = new System.Drawing.Size(250, 25);
             this.txtName.TabIndex = 17;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(155, 90);
+            this.label2.Location = new System.Drawing.Point(195, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 17);
             this.label2.TabIndex = 16;
@@ -208,7 +189,7 @@
             this.btnBookingSave.ForeColor = System.Drawing.Color.White;
             this.btnBookingSave.Image = global::RoomReservation.Properties.Resources.calendar_add_32x32;
             this.btnBookingSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBookingSave.Location = new System.Drawing.Point(429, 20);
+            this.btnBookingSave.Location = new System.Drawing.Point(557, 20);
             this.btnBookingSave.Name = "btnBookingSave";
             this.btnBookingSave.Size = new System.Drawing.Size(195, 40);
             this.btnBookingSave.TabIndex = 13;
@@ -238,7 +219,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(15, 90);
+            this.label1.Location = new System.Drawing.Point(15, 85);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 17);
             this.label1.TabIndex = 4;
@@ -248,72 +229,30 @@
             // 
             this.cbxRoom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxRoom.FormattingEnabled = true;
-            this.cbxRoom.Location = new System.Drawing.Point(15, 110);
+            this.cbxRoom.Location = new System.Drawing.Point(15, 105);
             this.cbxRoom.Name = "cbxRoom";
-            this.cbxRoom.Size = new System.Drawing.Size(120, 25);
+            this.cbxRoom.Size = new System.Drawing.Size(150, 25);
             this.cbxRoom.TabIndex = 3;
             this.cbxRoom.SelectedValueChanged += new System.EventHandler(this.cbxRoom_SelectedValueChanged);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.dataGridView1);
-            this.panel1.Controls.Add(this.dgvBooking);
+            this.panel1.Controls.Add(this.dgvAllBookings);
+            this.panel1.Controls.Add(this.btnExpand);
+            this.panel1.Controls.Add(this.dgvQuickBookings);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 175);
+            this.panel1.Location = new System.Drawing.Point(0, 164);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(868, 529);
+            this.panel1.Size = new System.Drawing.Size(868, 536);
             this.panel1.TabIndex = 4;
             // 
-            // dgvBooking
+            // dgvAllBookings
             // 
-            this.dgvBooking.AllowUserToAddRows = false;
-            this.dgvBooking.AllowUserToDeleteRows = false;
-            this.dgvBooking.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvBooking.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dgvBooking.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvBooking.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dgvBooking.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dgvBooking.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dgvBooking.Location = new System.Drawing.Point(0, 0);
-            this.dgvBooking.MultiSelect = false;
-            this.dgvBooking.Name = "dgvBooking";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvBooking.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dgvBooking.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvBooking.ShowEditingIcon = false;
-            this.dgvBooking.Size = new System.Drawing.Size(868, 264);
-            this.dgvBooking.TabIndex = 3;
-            this.dgvBooking.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvBooking_KeyDown);
-            // 
-            // tmrRefreshGrid
-            // 
-            this.tmrRefreshGrid.Tick += new System.EventHandler(this.tmrRefreshGrid_Tick);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
+            this.dgvAllBookings.AllowUserToAddRows = false;
+            this.dgvAllBookings.AllowUserToDeleteRows = false;
+            this.dgvAllBookings.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvAllBookings.BackgroundColor = System.Drawing.Color.Black;
+            this.dgvAllBookings.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
@@ -321,8 +260,8 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAllBookings.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvAllBookings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F);
@@ -330,12 +269,13 @@
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 264);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
+            this.dgvAllBookings.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvAllBookings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dgvAllBookings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dgvAllBookings.Location = new System.Drawing.Point(0, 288);
+            this.dgvAllBookings.MultiSelect = false;
+            this.dgvAllBookings.Name = "dgvAllBookings";
+            this.dgvAllBookings.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F);
@@ -343,44 +283,93 @@
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.ShowEditingIcon = false;
-            this.dataGridView1.Size = new System.Drawing.Size(868, 264);
-            this.dataGridView1.TabIndex = 4;
+            this.dgvAllBookings.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvAllBookings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvAllBookings.ShowEditingIcon = false;
+            this.dgvAllBookings.Size = new System.Drawing.Size(868, 248);
+            this.dgvAllBookings.TabIndex = 4;
+            this.dgvAllBookings.Visible = false;
+            this.dgvAllBookings.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAllBookings_CellClick);
             // 
-            // dtpWeekday
+            // dgvQuickBookings
             // 
-            this.dtpWeekday.Location = new System.Drawing.Point(320, 142);
-            this.dtpWeekday.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dtpWeekday.MaxDate = new System.DateTime(2025, 12, 31, 0, 0, 0, 0);
-            this.dtpWeekday.MinDate = new System.DateTime(2019, 1, 1, 0, 0, 0, 0);
-            this.dtpWeekday.Name = "dtpWeekday";
-            this.dtpWeekday.Size = new System.Drawing.Size(270, 25);
-            this.dtpWeekday.TabIndex = 28;
+            this.dgvQuickBookings.AllowUserToAddRows = false;
+            this.dgvQuickBookings.AllowUserToDeleteRows = false;
+            this.dgvQuickBookings.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQuickBookings.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvQuickBookings.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvQuickBookings.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvQuickBookings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dgvQuickBookings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dgvQuickBookings.Location = new System.Drawing.Point(0, 0);
+            this.dgvQuickBookings.MultiSelect = false;
+            this.dgvQuickBookings.Name = "dgvQuickBookings";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQuickBookings.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvQuickBookings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvQuickBookings.ShowEditingIcon = false;
+            this.dgvQuickBookings.Size = new System.Drawing.Size(868, 264);
+            this.dgvQuickBookings.TabIndex = 3;
+            this.dgvQuickBookings.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvBooking_KeyDown);
+            // 
+            // tmrRefreshGrid
+            // 
+            this.tmrRefreshGrid.Tick += new System.EventHandler(this.tmrRefreshGrid_Tick);
+            // 
+            // btnExpand
+            // 
+            this.btnExpand.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExpand.ForeColor = System.Drawing.Color.White;
+            this.btnExpand.Location = new System.Drawing.Point(0, 264);
+            this.btnExpand.Name = "btnExpand";
+            this.btnExpand.Size = new System.Drawing.Size(868, 24);
+            this.btnExpand.TabIndex = 5;
+            this.btnExpand.Text = "▼";
+            this.btnExpand.UseVisualStyleBackColor = true;
+            this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(868, 704);
+            this.ClientSize = new System.Drawing.Size(868, 700);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Reserva de Sala";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvBooking)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAllBookings)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvQuickBookings)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -393,7 +382,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbxStartHour;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox cbxWeekDay;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnBookingSave;
@@ -401,12 +389,12 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbxRoom;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dgvBooking;
+        private System.Windows.Forms.DataGridView dgvQuickBookings;
         private System.Windows.Forms.Button btnBookingDelete;
         private System.Windows.Forms.Timer tmrRefreshGrid;
-        private System.Windows.Forms.Button btnFutureBookings;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvAllBookings;
         private System.Windows.Forms.DateTimePicker dtpWeekday;
+        private System.Windows.Forms.Button btnExpand;
 
     }
 }
