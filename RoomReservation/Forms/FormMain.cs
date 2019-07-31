@@ -300,11 +300,11 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void dtpWeekday_ValueChanged(object sender, EventArgs e)
         {
-            if (dtpWeekday.Text.ToLower().Contains("saturday") || dtpWeekday.Text.Contains("sábado"))
+            if (dtpWeekday.Value.DayOfWeek == DayOfWeek.Saturday)
             {
                 dtpWeekday.Text = dtpWeekday.Value.AddDays(2).ToString();
             }
-            else if (dtpWeekday.Text.ToLower().Contains("sunday") || dtpWeekday.Text.Contains("domingo"))
+            else if (dtpWeekday.Value.DayOfWeek == DayOfWeek.Sunday)
             {
                 dtpWeekday.Text = dtpWeekday.Value.AddDays(1).ToString();
             }
@@ -337,6 +337,7 @@ namespace RoomReservation
             dgvAllBookings.Columns[3].HeaderText = "Data da Reserva";
             dgvAllBookings.Columns[4].HeaderText = "Hora Inicial";
             dgvAllBookings.Columns[5].HeaderText = "Hora Final";
+            dgvAllBookings.Columns["WeekDay"].DisplayIndex = 2;
             dgvAllBookings.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
             DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
             dgvAllBookings.Columns.Add(btn);
@@ -348,6 +349,7 @@ namespace RoomReservation
             btn.Name = "btn";
             btn.UseColumnTextForButtonValue = true;
             dgvAllBookings.Columns[6].Width = 50;
+            dgvAllBookings.Refresh();
         }
 
         /// <summary>
