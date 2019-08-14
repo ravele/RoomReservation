@@ -221,14 +221,21 @@ namespace RoomReservation
         /// <param name="e"></param>
         private void btnBookingDelete_Click(object sender, EventArgs e)
         {
-            if (cbxRoom.SelectedItem != null)
-                if (!string.IsNullOrEmpty(dgvQuickBookings.SelectedCells[0].Value.ToString()) && !dgvQuickBookings.CurrentRow.Cells["Horário"].Selected)
-                    if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        bookings.DeleteBooking(dgvQuickBookings.SelectedCells[0].Tag.ToString());
-                        LoadBookings();
-                        LoadAllBookings();
-                    }
+            int id = Convert.ToInt32(dgvQuickBookings.SelectedCells[0].Tag);
+            DateTime date = Convert.ToDateTime(bookingList[id-1].WeekDay);
+            if (date >= DateTime.Today)
+            {
+                if (cbxRoom.SelectedItem != null)
+                    if (!string.IsNullOrEmpty(dgvQuickBookings.SelectedCells[0].Value.ToString()) && !dgvQuickBookings.CurrentRow.Cells["Horário"].Selected)
+                        if (MessageBox.Show("Deseja excluir o agendamento?", "Mecalux", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            bookings.DeleteBooking(dgvQuickBookings.SelectedCells[0].Tag.ToString());
+                            LoadBookings();
+                            LoadAllBookings();
+                        }
+            }
+            else
+                MessageBox.Show("Você não pode excluir registros antigos!", "Mecalux", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         
         /// <summary>
@@ -337,7 +344,6 @@ namespace RoomReservation
             dgvAllBookings.Columns[3].HeaderText = "Data da Reserva";
             dgvAllBookings.Columns[4].HeaderText = "Hora Inicial";
             dgvAllBookings.Columns[5].HeaderText = "Hora Final";
-            dgvAllBookings.Columns["WeekDay"].DisplayIndex = 2;
             dgvAllBookings.Columns.Cast<DataGridViewColumn>().ToList().ForEach(f => f.SortMode = DataGridViewColumnSortMode.NotSortable);
             DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
             dgvAllBookings.Columns.Add(btn);
@@ -349,7 +355,6 @@ namespace RoomReservation
             btn.Name = "btn";
             btn.UseColumnTextForButtonValue = true;
             dgvAllBookings.Columns[6].Width = 50;
-            dgvAllBookings.Refresh();
         }
 
         /// <summary>
@@ -373,8 +378,8 @@ namespace RoomReservation
             {
                 Id = bookingListAll.Count > 0 ? bookingListAll.LastOrDefault().Id + 1 : bookingListAll.Count + i + 1,
                 RoomId = cbxRoom.SelectedValue == null ? 0 : Convert.ToInt32(cbxRoom.SelectedValue),
-                Username = txtName.Text,
                 WeekDay = dtpWeekday.Text,
+                Username = txtName.Text,
                 StartBookingHour = (startHour+i < 10 ? "0" + (startHour + i) + ":00" : (startHour + i) + ":00"),
                 EndBookingHour = (startHour+i+1 < 10 ? "0" + (startHour + i + 1) + ":00" : (startHour + i + 1) + ":00")
             };

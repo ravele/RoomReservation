@@ -52,9 +52,9 @@
             this.cbxRoom = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgvAllBookings = new System.Windows.Forms.DataGridView();
+            this.btnExpand = new System.Windows.Forms.Button();
             this.dgvQuickBookings = new System.Windows.Forms.DataGridView();
             this.tmrRefreshGrid = new System.Windows.Forms.Timer(this.components);
-            this.btnExpand = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAllBookings)).BeginInit();
@@ -90,7 +90,7 @@
             this.dtpWeekday.MaxDate = new System.DateTime(2025, 12, 31, 0, 0, 0, 0);
             this.dtpWeekday.MinDate = new System.DateTime(2019, 1, 1, 0, 0, 0, 0);
             this.dtpWeekday.Name = "dtpWeekday";
-            this.dtpWeekday.Size = new System.Drawing.Size(145, 25);
+            this.dtpWeekday.Size = new System.Drawing.Size(145, 29);
             this.dtpWeekday.TabIndex = 28;
             this.dtpWeekday.ValueChanged += new System.EventHandler(this.dtpWeekday_ValueChanged);
             // 
@@ -117,7 +117,7 @@
             this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(763, 85);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 17);
+            this.label5.Size = new System.Drawing.Size(87, 23);
             this.label5.TabIndex = 23;
             this.label5.Text = "Hora Final";
             // 
@@ -128,7 +128,7 @@
             this.cbxEndHour.FormattingEnabled = true;
             this.cbxEndHour.Location = new System.Drawing.Point(763, 105);
             this.cbxEndHour.Name = "cbxEndHour";
-            this.cbxEndHour.Size = new System.Drawing.Size(85, 25);
+            this.cbxEndHour.Size = new System.Drawing.Size(85, 29);
             this.cbxEndHour.TabIndex = 22;
             // 
             // label4
@@ -137,7 +137,7 @@
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(650, 85);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 17);
+            this.label4.Size = new System.Drawing.Size(96, 23);
             this.label4.TabIndex = 21;
             this.label4.Text = "Hora Inicial";
             // 
@@ -149,7 +149,7 @@
             ""});
             this.cbxStartHour.Location = new System.Drawing.Point(650, 105);
             this.cbxStartHour.Name = "cbxStartHour";
-            this.cbxStartHour.Size = new System.Drawing.Size(85, 25);
+            this.cbxStartHour.Size = new System.Drawing.Size(85, 29);
             this.cbxStartHour.TabIndex = 20;
             this.cbxStartHour.SelectedValueChanged += new System.EventHandler(this.cbxStartHour_SelectedValueChanged);
             // 
@@ -159,15 +159,15 @@
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(475, 85);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 17);
+            this.label3.Size = new System.Drawing.Size(133, 23);
             this.label3.TabIndex = 19;
-            this.label3.Text = "Dia da Reserva";
+            this.label3.Text = "Data da Reserva";
             // 
             // txtName
             // 
             this.txtName.Location = new System.Drawing.Point(195, 105);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(250, 25);
+            this.txtName.Size = new System.Drawing.Size(250, 29);
             this.txtName.TabIndex = 17;
             // 
             // label2
@@ -176,7 +176,7 @@
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(195, 85);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 17);
+            this.label2.Size = new System.Drawing.Size(93, 23);
             this.label2.TabIndex = 16;
             this.label2.Text = "Reservante";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -221,7 +221,7 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(15, 85);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 17);
+            this.label1.Size = new System.Drawing.Size(135, 23);
             this.label1.TabIndex = 4;
             this.label1.Text = "Sala selecionada";
             // 
@@ -231,7 +231,7 @@
             this.cbxRoom.FormattingEnabled = true;
             this.cbxRoom.Location = new System.Drawing.Point(15, 105);
             this.cbxRoom.Name = "cbxRoom";
-            this.cbxRoom.Size = new System.Drawing.Size(150, 25);
+            this.cbxRoom.Size = new System.Drawing.Size(150, 29);
             this.cbxRoom.TabIndex = 3;
             this.cbxRoom.SelectedValueChanged += new System.EventHandler(this.cbxRoom_SelectedValueChanged);
             // 
@@ -291,6 +291,19 @@
             this.dgvAllBookings.Visible = false;
             this.dgvAllBookings.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAllBookings_CellClick);
             // 
+            // btnExpand
+            // 
+            this.btnExpand.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExpand.ForeColor = System.Drawing.Color.White;
+            this.btnExpand.Location = new System.Drawing.Point(0, 264);
+            this.btnExpand.Name = "btnExpand";
+            this.btnExpand.Size = new System.Drawing.Size(868, 24);
+            this.btnExpand.TabIndex = 5;
+            this.btnExpand.Text = "▼";
+            this.btnExpand.UseVisualStyleBackColor = true;
+            this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
+            // 
             // dgvQuickBookings
             // 
             this.dgvQuickBookings.AllowUserToAddRows = false;
@@ -336,22 +349,9 @@
             // 
             this.tmrRefreshGrid.Tick += new System.EventHandler(this.tmrRefreshGrid_Tick);
             // 
-            // btnExpand
-            // 
-            this.btnExpand.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnExpand.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExpand.ForeColor = System.Drawing.Color.White;
-            this.btnExpand.Location = new System.Drawing.Point(0, 264);
-            this.btnExpand.Name = "btnExpand";
-            this.btnExpand.Size = new System.Drawing.Size(868, 24);
-            this.btnExpand.TabIndex = 5;
-            this.btnExpand.Text = "▼";
-            this.btnExpand.UseVisualStyleBackColor = true;
-            this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
-            // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(868, 700);
