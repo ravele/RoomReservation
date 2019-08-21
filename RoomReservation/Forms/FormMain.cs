@@ -398,7 +398,7 @@ namespace RoomReservation
                     for (int i = 0; i < bookingListAll.Count; i++)
                     {
                         splitter = bookingListAll[i].WeekDay.Split(' ');
-                        startDateSelected = splitter.Last() + "/"+ DateTime.Today.Year;
+                        startDateSelected = splitter.Last();
                         startList = Convert.ToDateTime(startDateSelected);
                         if (startList < DateTime.Today)
                             bookings.DeleteBooking(bookingListAll[i].Id.ToString());
